@@ -11,5 +11,13 @@ def blog_single(request, pk):
     post = get_object_or_404(Post, pk=pk, status=True) 
     post.counted_views += 1
     post.save()
-    context = {'post': post}
+    posts = list(Post.objects.filter(published_date__lte=timezone.now(), status=True).order_by('-published_date'))
+    index_post = posts.index(post)
+    previous_post = None
+    next_post = None
+    if index_post > 0:
+        previous_post = posts[index_post - 1]
+    if index_post < len(posts) - 1:
+        next_post = posts[index_post + 1]
+    context = {'post': post, 'previous_post': previous_post, 'next_post': next_post}
     return render(request, 'blog/blog-single.html', context)
