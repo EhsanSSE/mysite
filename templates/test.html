@@ -1,0 +1,18 @@
+{% load blog_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+</head>
+<body>
+    <h1>Test template tags</h1>
+    {% totalpost as p %}
+    {% for post in p %}
+    <p>Test: {{post.content|snnipet:60}}</p>
+    {% endfor %}
+
+    {% popularposts %}
+</body>
+</html>
