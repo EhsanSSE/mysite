@@ -2,10 +2,12 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from blog.models import Post
 
-def blog_view(request, cat_name=None):
+def blog_view(request, **kwargs):
     posts = Post.objects.filter(published_date__lte=timezone.now(), status=True).order_by('-published_date')
-    if cat_name:
-        posts = posts.filter(category__name__iexact=cat_name)
+    if kwargs.get('cat_name') != None:
+        posts = posts.filter(category__name__iexact=kwargs.get('cat_name'))
+    if kwargs.get('author_username') != None:
+        posts = posts.filter(author__username=kwargs.get('author_username'))
     context = {'posts': posts}
     return render(request, 'blog/blog-home.html', context)
 
