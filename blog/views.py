@@ -11,14 +11,15 @@ def blog_view(request, **kwargs):
         posts = posts.filter(author__username=kwargs.get('author_username'))
     
     paginator = Paginator(posts, 3)
+    page_num = request.GET.get('page', 1)
     try:
-        page_num = request.GET.get('page')
-        posts = paginator.get_page(page_num)
-    except PageNotAnInteger:
-        posts = paginator.get_page(1)
-    except EmptyPage:
-        posts = paginator.get_page(1)
+        page_num = int(page_num)
+        if page_num < 1 or page_num > paginator.num_pages:
+            page_num = 1
+    except ValueError:
+        page_num = 1
 
+    posts = paginator.get_page(page_num)
     context = {'posts': posts}
     return render(request, 'blog/blog-home.html', context)
 
