@@ -14,6 +14,10 @@ class ContactForm(forms.ModelForm):
         model = Contact
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['subject'].required = False
+
 
 class NewsletterForm(forms.ModelForm):
 
