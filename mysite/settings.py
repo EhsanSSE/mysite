@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'django.contrib.sites',
     'django.contrib.sitemaps',
+    'robots',
+    'taggit',
     'website.apps.WebsiteConfig',
     'blog.apps.BlogConfig',
 ]
@@ -153,3 +155,8 @@ MESSAGE_TAGS = {
 # site ID for sites module:
 
 SITE_ID = 2
+
+# Robots:
+
+ROBOTS_USE_SITEMAP = True
+ROBOTS_USE_HOST = True
