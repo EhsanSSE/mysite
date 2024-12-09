@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
-from blog.models import Post
+from blog.models import Post, Comment
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 def blog_view(request, **kwargs):
@@ -38,7 +38,8 @@ def blog_single(request, pk):
         previous_post = posts[index_post - 1]
     if index_post < len(posts) - 1:
         next_post = posts[index_post + 1]
-    context = {'post': post, 'previous_post': previous_post, 'next_post': next_post}
+    comments = Comment.objects.filter(post=post.id, approved=True)
+    context = {'post': post, 'previous_post': previous_post, 'next_post': next_post, 'comments': comments}
     return render(request, 'blog/blog-single.html', context)
 
 
