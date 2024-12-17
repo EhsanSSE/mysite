@@ -1,9 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from blog.models import Post, Comment
 from django.core.paginator import Paginator
 from blog.forms import CommentForm
 from django.contrib import messages
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 
 def blog_view(request, **kwargs):
     posts = Post.objects.filter(published_date__lte=timezone.now(), status=True).order_by('-published_date')
@@ -29,29 +31,56 @@ def blog_view(request, **kwargs):
     return render(request, 'blog/blog-home.html', context)
 
 def blog_single(request, pk):
+    post = get_object_or_404(Post, pk=pk, status=True)
+
+    # Redirect if login is required
+    if post.login_require and not request.user.is_authenticated:
+        return redirect(f"{reverse('accounts:login')}?next={request.path}")
+
+    # Increment post views
+    post.counted_views += 1
+    post.save()
+
+    # Get next and previous posts
+    previous_post, next_post = get_adjacent_posts(post)
+
+    # Handle comment form
+    form = handle_comment_form(request, post)
+
+    # Fetch approved comments
+    comments = Comment.objects.filter(post=post.id, approved=True)
+
+    context = {
+        'post': post,
+        'previous_post': previous_post,
+        'next_post': next_post,
+        'comments': comments,
+        'form': form,
+    }
+    return render(request, 'blog/blog-single.html', context)
+
+def get_adjacent_posts(post):
+    """Get previous and next posts relative to the current post."""
+    posts = list(Post.objects.filter(published_date__lte=timezone.now(), status=True).order_by('-published_date'))
+    index_post = posts.index(post)
+    previous_post = posts[index_post - 1] if index_post > 0 else None
+    next_post = posts[index_post + 1] if index_post < len(posts) - 1 else None
+    return previous_post, next_post
+
+def handle_comment_form(request, post):
+    """Handle the comment form submission."""
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.add_message(request, messages.SUCCESS, 'Your Comment submitted Successfully')
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.save()
+            messages.success(request, 'Your Comment submitted Successfully')
         else:
-            messages.add_message(request, messages.ERROR, 'Your Comment Didnt submitted')
-
-    post = get_object_or_404(Post, pk=pk, status=True) 
-    post.counted_views += 1
-    post.save()
-    posts = list(Post.objects.filter(published_date__lte=timezone.now(), status=True).order_by('-published_date'))
-    index_post = posts.index(post)
-    previous_post = None
-    next_post = None
-    if index_post > 0:
-        previous_post = posts[index_post - 1]
-    if index_post < len(posts) - 1:
-        next_post = posts[index_post + 1]
-    comments = Comment.objects.filter(post=post.id, approved=True)
-    form = CommentForm()
-    context = {'post': post, 'previous_post': previous_post, 'next_post': next_post, 'comments': comments, 'form': form}
-    return render(request, 'blog/blog-single.html', context)
+            messages.error(request, 'Your Comment Did not submit')
+    else:
+        form = CommentForm()
+    return form
 
 
 def test_view(request):

@@ -100,9 +100,6 @@
       </div>
     </header>
 
-    {% block content %}
-    {% endblock %}
-
     <!-- messages pop up-->
 
     {% for message in messages %}
@@ -115,6 +112,9 @@
           </div>
         </div>
       {% endfor %}
+
+    {% block content %}
+    {% endblock %}
 
     <!-- start footer Area -->
     <footer class="footer-area section-gap">
