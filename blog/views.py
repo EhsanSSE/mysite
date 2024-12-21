@@ -5,7 +5,6 @@ from django.core.paginator import Paginator
 from blog.forms import CommentForm
 from django.contrib import messages
 from django.urls import reverse
-from django.http import HttpResponseRedirect
 
 def blog_view(request, **kwargs):
     posts = Post.objects.filter(published_date__lte=timezone.now(), status=True).order_by('-published_date')
