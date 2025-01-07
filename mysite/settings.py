@@ -184,15 +184,8 @@ AUTHENTICATION_BACKENDS = [
 
 # email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'ehsanshirvani757@gmail.com'
-# EMAIL_HOST_PASSWORD = 'Ehsan4436'
-
-
-# Looking to send emails in production? Check out our Email API/SMTP product!
-EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_HOST_USER = 'a1ca83edbf151e'
-EMAIL_HOST_PASSWORD = '7d17658f68887b'
-EMAIL_PORT = '2525'
+EMAIL_HOST_USER = 'ehsanshirvani33@gmail.com'
+EMAIL_HOST_PASSWORD = 'yvlhcnfdhrviawfr'

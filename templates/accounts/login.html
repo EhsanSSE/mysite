@@ -47,6 +47,16 @@
         placeholder="Password"
         required
       />
+      {% if messages %}
+      <div>
+        {% for message in messages %}
+            <div class="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
       <div class="checkbox mb-3">
         <label>
           <a href='{% url "accounts:password_reset" %}'>

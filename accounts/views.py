@@ -4,6 +4,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from accounts.forms import UserRegistrationForm
 from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView
+from django.contrib.auth.backends import ModelBackend
+from django.contrib import messages
 
 # Create your views here.
 def login_view(request):
@@ -17,6 +19,8 @@ def login_view(request):
                 if user is not None:
                     login(request, user)
                     return redirect('/')
+            else:
+                messages.error(request, 'INVALID username or password')
             
         form = AuthenticationForm()
         return render(request, 'accounts/login.html', {'form': form})
@@ -35,9 +39,12 @@ def signup_view(request):
             form = UserRegistrationForm(request.POST)
             if form.is_valid():
                 user = form.save()
+                user.backend = 'django.contrib.auth.backends.ModelBackend'
                 login(request, user)
                 return redirect('/')
-        form = UserRegistrationForm()
+        else:
+            form = UserRegistrationForm()
+
         context = {'form': form}
         return render(request, 'accounts/signup.html', context)
     else:
