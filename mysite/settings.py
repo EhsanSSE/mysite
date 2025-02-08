@@ -132,18 +132,6 @@ MESSAGE_TAGS = {
         messages.ERROR: 'alert-danger',
 }
 
-
-
-# Robots:
-
-ROBOTS_USE_SITEMAP = True
-ROBOTS_USE_HOST = True
-
-
-# summernote configs
-
-SUMMERNOTE_THEME = 'bs4'
-
 # captcha:
 
 MULTI_CAPTCHA_ADMIN = {
