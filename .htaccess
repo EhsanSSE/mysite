@@ -1,0 +1,7 @@
+RewriteEngine On
+
+RewriteCond %{HTTP_HOST} ^www\.ehsanshirvani\.ir$ [NC]
+RewriteRule ^(.*)$ https://ehsanshirvani.ir/$1 [L,R=301]
+
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://ehsanshirvani.ir/$1 [L,R=301]
