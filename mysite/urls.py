@@ -28,7 +28,7 @@ sitemaps = {
 }
 
 urlpatterns = [
-    # re_path(r'^.*$', coming_soon, name='coming_soon'),
+    re_path(r'^.*$', coming_soon, name='coming_soon'),
     path('admin/', admin.site.urls),
     path('', include('website.urls')),
     path('blog/', include('blog.urls')),
